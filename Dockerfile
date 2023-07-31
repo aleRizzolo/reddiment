@@ -2,9 +2,12 @@ FROM jupyter/base-notebook
 
 WORKDIR /app
 
-COPY requirements.txt .
-
-RUN pip install -r requirements.txt
+RUN pip install praw \
+    pip install python-dotenv \
+    pip install pandas \
+    pip install nltk \
+    pip install numpy \
+    pip install beautifulsoup4
 
 COPY . .
 
