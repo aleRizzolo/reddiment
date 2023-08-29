@@ -1,11 +1,12 @@
 <script>
   import { onMount } from 'svelte';
+
   import { MongoClient } from 'mongodb';
 
-  let comments = [];
+  export let comments = [];
 
   onMount(async () => {
-    const client = new MongoClient(import.meta.env.VITE_MONGO_URI);
+    const client = new MongoClient(process.env.MONGO_URI);
 
     try {
       await client.connect();
