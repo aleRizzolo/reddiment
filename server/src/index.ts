@@ -4,14 +4,14 @@ import express, { Express } from "express"
 dotenv.config()
 
 import { connectToDatabase } from "./db"
-//import authRoutes from "./routes/auth/routes"
+import fetchDbRouter from "./routes/routes"
 
 const port = process.env.PORT
 const app: Express = express()
 
 app.use(express.json())
 
-//app.use("/", auth)
+app.use("/api", fetchDbRouter)
 
 connectToDatabase()
 
