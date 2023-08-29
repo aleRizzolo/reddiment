@@ -18,13 +18,14 @@
 				<a href="/">Home</a>
 			</li>
 			<li aria-current={$page.url.pathname === '/dataset' ? 'page' : undefined}>
-				<a href="/dataset">Dataset</a>
+  				<a href="/dataset">Dataset</a>
 			</li>
+
 			<li aria-current={$page.url.pathname === '/images' ? 'page' : undefined}>
-				<a href="/Images">Images</a>
+				<a href="/images">Images</a>
 			</li>
 			<li aria-current={$page.url.pathname.startsWith('/graphs') ? 'page' : undefined}>
-				<a href="/Graphs">Graphs</a>
+				<a href="/graphs">Graphs</a>
 			</li>
 		</ul>
 		<svg viewBox="0 0 2 3" aria-hidden="true">
