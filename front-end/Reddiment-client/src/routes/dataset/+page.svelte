@@ -1,36 +1,14 @@
 <script>
-  import { onMount } from 'svelte';
-  import { MongoClient } from 'mongodb';
+  import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+  import DataTable from './DataTable.svelte';
 
-  let comments = [];
-
-  onMount(async () => {
-    const client = new MongoClient(import.meta.env.VITE_MONGO_URI);
-
-    try {
-      await client.connect();
-      const db = client.db('Reddiment');
-      const collection = db.collection('dataset');
-      const result = await collection.find().toArray();
-      comments = result;
-    } catch (error) {
-      console.error(error);
-    } finally {
-      await client.close();
-    }
-  });
+  // This is just a sample data for demonstration purposes
+  let fetchedData = [
+    { name: 'John', email: 'john@example.com' },
+    { name: 'Jane', email: 'jane@example.com' },
+    // ... more data
+  ];
 </script>
 
-<ul>
-  {#each comments as comment}
-    <li key={comment._id}>
-      <p>{comment.comment}</p>
-      <p>
-        Acceptable: {comment.probabilities_acceptable}
-        Hate: {comment.probabilities_hate}
-        Offensive: {comment.probabilities_offensive}
-        Violent: {comment.probabilities_violent}
-      </p>
-    </li>
-  {/each}
-</ul>
+<h1>Welcome to the Dataset Page</h1>
+<DataTable data={fetchedData} />
