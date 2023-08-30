@@ -6,7 +6,7 @@ dotenv.config()
 import { connectToDatabase } from "./db"
 import fetchDbRouter from "./routes/routes"
 
-const port = process.env.PORT || 80
+const port = process.env.PORT || 443
 const app: Express = express()
 
 app.use(express.json())
