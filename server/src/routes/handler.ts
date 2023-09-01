@@ -5,7 +5,7 @@ import { DatasetModel } from "../models/"
 
 export const getDataset = async (req: Request, res: Response) => {
   try {
-    const dataset = await DatasetModel.find({})
+    const dataset = await DatasetModel.find({}).select({ _id: 0 })
 
     if (dataset === null) {
       return res.status(404).send({ success: false, statusCode: 404, message: "Dataset not found" })
