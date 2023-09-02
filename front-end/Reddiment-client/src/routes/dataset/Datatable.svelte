@@ -2,7 +2,7 @@
 	import 'carbon-components-svelte/css/g100.css';
 	import { onMount } from 'svelte';
 	import { fetchComments } from '../../api';
-	import { DataTable, Pagination } from 'carbon-components-svelte';
+	import { DataTable, Pagination, ProgressBar } from 'carbon-components-svelte';
 
 	let displayedRows = [];
 	type Comment = {
@@ -83,7 +83,8 @@
 
 <!-- Loading Indicator -->
 {#if loading}
-	<p style="color: black; font-weight: bold;">Loading...</p>
+	<p style="color: black; font-weight: bold; text-align: center;">Loading...</p>
+	<ProgressBar />
 {:else}
 	<!-- Container for the responsive table (centered) -->
 	<div
@@ -101,6 +102,11 @@
 			rows={items}
 		/>
 
-		<Pagination bind:pageSize={rowsPerPage} bind:page={currentPage} totalItems={items.length} />
+		<Pagination
+			bind:pageSize={rowsPerPage}
+			bind:page={currentPage}
+			totalItems={items.length}
+			pageSizes={[10, 15, 20, 25, 50, 100]}
+		/>
 	</div>
 {/if}
