@@ -1,17 +1,10 @@
 <script lang="ts">
+  import "carbon-components-svelte/css/g100.css";
   import { onMount } from 'svelte';
-  import { fetchComments } from '../../api.ts'; 
-  import DataTable, {
-    Head,
-    Body,
-    Row,
-    Cell,
-    Pagination,
-  } from '@smui/data-table';
-  import Select, { Option } from '@smui/select';
-  import IconButton from '@smui/icon-button';
-  import { Label } from '@smui/common';
+  import { fetchComments } from '../../api.ts';
+  import { DataTable, Pagination } from "carbon-components-svelte";
 
+  let displayedRows = [];
   type Comment = {
     comment: string;
     probabilities_acceptable: string;
@@ -19,7 +12,6 @@
     probabilities_offensive: string;
     probabilities_violent: string;
     language: string;
-    errors: string;
   };
   let items: Comment[] = [];
   let rowsPerPage = 10;
@@ -30,21 +22,50 @@
   let slice: Comment[] = [];
   let lastPage = 0;
 
+  let headers: { key: string; value: string }[] = [];
+
+  // Loading indicator flag
+  let loading = true;
+
   // Define a function to update the derived variables
   function updateDerivedVariables() {
     start = currentPage * rowsPerPage;
     end = Math.min(start + rowsPerPage, items.length);
     slice = items.slice(start, end);
     lastPage = Math.max(Math.ceil(items.length / rowsPerPage) - 1, 0);
+
+    // Define headers based on your data structure
+    headers = [
+      { key: "comment", value: "Comment" },
+      { key: "probabilities_acceptable", value: "Acceptable" },
+      { key: "probabilities_hate", value: "Hate" },
+      { key: "probabilities_offensive", value: "Offensive" },
+      { key: "probabilities_violent", value: "Violent" },
+      { key: "language", value: "Language" },
+    ];
   }
 
   onMount(async () => {
     try {
-      const fetchedItems = await fetchComments();
-      items = fetchedItems;
-      updateDerivedVariables(); // Update the derived variables after fetching data
+      const response = await fetchComments();
+      if (response.ok) {
+        const newData = await response.json();
+        if (Array.isArray(newData.data)) {
+          // Update items and add an ordered numeric list starting from 0
+          items = newData.data.map((row, i) => ({ ...row, id: i })); // Add unique id
+          // Update derived variables
+          updateDerivedVariables();
+        } else {
+          console.error('API response data is not an array:', newData.data);
+        }
+      } else {
+        console.error('API error:', response.statusText);
+      }
     } catch (error) {
       console.error('Error fetching data:', error.message);
+    } finally {
+      // Set loading to false when data fetching is done
+      loading = false;
     }
   });
 
@@ -52,90 +73,38 @@
   $: {
     updateDerivedVariables();
   }
+
+  // Reactively update displayedRows when slice changes
+  $: {
+    displayedRows = slice.map((item, index) => ({ key: index, ...item }));
+  }
+
 </script>
 
-<style>
-  /* Add a CSS class to the container div */
-  .responsive-table-container {
-    overflow-x: auto; /* Add horizontal scroll for small screens */
-  }
+<!-- Loading Indicator -->
+{#if loading}
+  <p style="color: black; font-weight: bold;">Loading...</p>
+{:else}
+  <!-- Container for the responsive table (centered) -->
+  <div style="overflow-x: auto; text-align: center; width: 130%; margin: 0 auto; margin-left: -15%;">
+    <!-- DataTable and Pagination components -->
+    <DataTable
+      sortable
+      title="Dataset"
+      description="Welcome to the Dataset page"
+      headers={headers}
+      pageSize={rowsPerPage}
+      page={currentPage}
+      totalItems={slice.length}
+      rows={items}
+    >
+    </DataTable>
 
-  /* Apply styles to the DataTable to make it responsive */
-  .responsive-table {
-    width: 100%;
-    display: block;
-    overflow-x: auto;
-  }
-</style>
+    <Pagination
+      pageSize={rowsPerPage}
+      page={currentPage}
+      totalItems={slice.length}
+    />
+  </div>
+{/if}
 
-<!-- Wrap the DataTable in a container div with the responsive class -->
-<div class="responsive-table-container">
-  <DataTable table$aria-label="Comment list" class="responsive-table">
-    <Head>
-      <Row>
-        <Cell style="width: 100%;">Comment</Cell>
-        <Cell>Acceptable</Cell>
-        <Cell>Hate</Cell>
-        <Cell>Offensive</Cell>
-        <Cell>Violent</Cell>
-        <Cell>Language</Cell>
-        <Cell>Errors</Cell>
-      </Row>
-    </Head>
-    <Body>
-      {#each slice as item (item.comment)}
-        <Row>
-          <Cell>{item.comment}</Cell>
-          <Cell>{item.probabilities_acceptable}</Cell>
-          <Cell>{item.probabilities_hate}</Cell>
-          <Cell>{item.probabilities_offensive}</Cell>
-          <Cell>{item.probabilities_violent}</Cell>
-          <Cell>{item.language}</Cell>
-          <Cell>{item.errors}</Cell>
-        </Row>
-      {/each}
-    </Body>
-    <Pagination slot="paginate">
-      <svelte:fragment slot="rowsPerPage">
-        <Label>Rows Per Page</Label>
-        <Select variant="outlined" bind:value={rowsPerPage} noLabel>
-          <Option value={10}>10</Option>
-          <Option value={25}>25</Option>
-          <Option value={100}>100</Option>
-        </Select>
-      </svelte:fragment>
-      <svelte:fragment slot="total">
-        {start + 1}-{end} of {items.length}
-      </svelte:fragment>
-
-      <IconButton
-        class="material-icons"
-        action="first-page"
-        title="First page"
-        on:click={() => (currentPage = 0)}
-        disabled={currentPage === 0}>first_page</IconButton
-      >
-      <IconButton
-        class="material-icons"
-        action="prev-page"
-        title="Prev page"
-        on:click={() => currentPage--}
-        disabled={currentPage === 0}>chevron_left</IconButton
-      >
-      <IconButton
-        class="material-icons"
-        action="next-page"
-        title="Next page"
-        on:click={() => currentPage++}
-        disabled={currentPage === lastPage}>chevron_right</IconButton
-      >
-      <IconButton
-        class="material-icons"
-        action="last-page"
-        title="Last page"
-        on:click={() => (currentPage = lastPage)}
-        disabled={currentPage === lastPage}>last_page</IconButton
-      >
-    </Pagination>
-  </DataTable>
-</div>
