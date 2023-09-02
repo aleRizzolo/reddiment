@@ -1,94 +1,141 @@
-<script>
-  import SvelteTable from "svelte-table";
+<script lang="ts">
   import { onMount } from 'svelte';
+  import { fetchComments } from '../../api.ts'; 
+  import DataTable, {
+    Head,
+    Body,
+    Row,
+    Cell,
+    Pagination,
+  } from '@smui/data-table';
+  import Select, { Option } from '@smui/select';
+  import IconButton from '@smui/icon-button';
+  import { Label } from '@smui/common';
 
-  let sortBy = ""; // Initially no sorting
-  let sortOrder = 1;
-  let iconAsc = "↑";
-  let iconDesc = "↓";
-  let selectedCols = []; // Columns will be dynamically created based on JSON data
-  let numRows = 10;
-  let data = [];
+  type Comment = {
+    comment: string;
+    probabilities_acceptable: string;
+    probabilities_hate: string;
+    probabilities_offensive: string;
+    probabilities_violent: string;
+    language: string;
+    errors: string;
+  };
+  let items: Comment[] = [];
+  let rowsPerPage = 10;
+  let currentPage = 0;
 
-  const COLUMNS = {}; // Define an empty columns object
+  let start = 0;
+  let end = 0;
+  let slice: Comment[] = [];
+  let lastPage = 0;
 
-  $: cols = selectedCols.map(key => COLUMNS[key]);
-
-  let comments = [];
-
-  async function fetchComments() {
-    try {
-      const response = await fetch('http://localhost:3000/api/dataset');
-      if (!response.ok) {
-        throw new Error('Error fetching data');
-      }
-      const jsonData = await response.json();
-
-      // Create columns dynamically based on the JSON fields
-      selectedCols = Object.keys(jsonData.data[0]);
-
-      // Remove the 'id' column from the selectedCols
-      selectedCols = selectedCols.filter(colKey => colKey !== 'id');
-
-      // Create column definitions
-      selectedCols.forEach(colKey => {
-        COLUMNS[colKey] = {
-          key: colKey,
-          title: colKey.toUpperCase(),
-          value: v => v[colKey],
-          sortable: true,
-        };
-      });
-
-      comments = jsonData.data;
-    } catch (error) {
-      console.error(error);
-    }
+  // Define a function to update the derived variables
+  function updateDerivedVariables() {
+    start = currentPage * rowsPerPage;
+    end = Math.min(start + rowsPerPage, items.length);
+    slice = items.slice(start, end);
+    lastPage = Math.max(Math.ceil(items.length / rowsPerPage) - 1, 0);
   }
 
-  onMount(fetchComments);
+  onMount(async () => {
+    try {
+      const fetchedItems = await fetchComments();
+      items = fetchedItems;
+      updateDerivedVariables(); // Update the derived variables after fetching data
+    } catch (error) {
+      console.error('Error fetching data:', error.message);
+    }
+  });
+
+  // Reactively update the derived variables whenever items, rowsPerPage, or currentPage changes
+  $: {
+    updateDerivedVariables();
+  }
 </script>
 
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
-<div class="container">
-  <h1>SvelteTable Example</h1>
-  <p>
-    Shows that filters are reactive
-  </p>
-  <div class="input-group pb-3">
-    <button class="btn btn-primary" on:click={fetchComments}>
-      Fetch Data
-    </button>
-    <input bind:value={numRows} class="form-control">
+<style>
+  /* Add a CSS class to the container div */
+  .responsive-table-container {
+    overflow-x: auto; /* Add horizontal scroll for small screens */
+  }
 
-    <button
-      class="btn btn-primary"
-      on:click={() => {
-        sortOrder = 1;
-      }}
-      disabled={sortOrder === 1}
-      style="float:right;">
-      SORT {iconAsc}
-    </button>
-    <button
-      class="btn btn-primary"
-      on:click={() => {
-        sortOrder = -1;
-      }}
-      disabled={sortOrder === -1}
-      style="float:right;">
-      SORT {iconDesc}
-    </button>
-  </div>
+  /* Apply styles to the DataTable to make it responsive */
+  .responsive-table {
+    width: 100%;
+    display: block;
+    overflow-x: auto;
+  }
+</style>
 
-  <div class="row">
-    <SvelteTable
-      columns={cols}
-      rows={data}
-      bind:sortBy
-      bind:sortOrder
-      classNameTable={['table table-striped']}
-      classNameThead={['table-primary']}
-      classNameSelect={['custom-select']} />
-  </div>
+<!-- Wrap the DataTable in a container div with the responsive class -->
+<div class="responsive-table-container">
+  <DataTable table$aria-label="Comment list" class="responsive-table">
+    <Head>
+      <Row>
+        <Cell style="width: 100%;">Comment</Cell>
+        <Cell>Acceptable</Cell>
+        <Cell>Hate</Cell>
+        <Cell>Offensive</Cell>
+        <Cell>Violent</Cell>
+        <Cell>Language</Cell>
+        <Cell>Errors</Cell>
+      </Row>
+    </Head>
+    <Body>
+      {#each slice as item (item.comment)}
+        <Row>
+          <Cell>{item.comment}</Cell>
+          <Cell>{item.probabilities_acceptable}</Cell>
+          <Cell>{item.probabilities_hate}</Cell>
+          <Cell>{item.probabilities_offensive}</Cell>
+          <Cell>{item.probabilities_violent}</Cell>
+          <Cell>{item.language}</Cell>
+          <Cell>{item.errors}</Cell>
+        </Row>
+      {/each}
+    </Body>
+    <Pagination slot="paginate">
+      <svelte:fragment slot="rowsPerPage">
+        <Label>Rows Per Page</Label>
+        <Select variant="outlined" bind:value={rowsPerPage} noLabel>
+          <Option value={10}>10</Option>
+          <Option value={25}>25</Option>
+          <Option value={100}>100</Option>
+        </Select>
+      </svelte:fragment>
+      <svelte:fragment slot="total">
+        {start + 1}-{end} of {items.length}
+      </svelte:fragment>
+
+      <IconButton
+        class="material-icons"
+        action="first-page"
+        title="First page"
+        on:click={() => (currentPage = 0)}
+        disabled={currentPage === 0}>first_page</IconButton
+      >
+      <IconButton
+        class="material-icons"
+        action="prev-page"
+        title="Prev page"
+        on:click={() => currentPage--}
+        disabled={currentPage === 0}>chevron_left</IconButton
+      >
+      <IconButton
+        class="material-icons"
+        action="next-page"
+        title="Next page"
+        on:click={() => currentPage++}
+        disabled={currentPage === lastPage}>chevron_right</IconButton
+      >
+      <IconButton
+        class="material-icons"
+        action="last-page"
+        title="Last page"
+        on:click={() => (currentPage = lastPage)}
+        disabled={currentPage === lastPage}>last_page</IconButton
+      >
+    </Pagination>
+  </DataTable>
 </div>
