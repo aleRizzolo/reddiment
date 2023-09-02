@@ -102,7 +102,7 @@ export const getScatterPlotImage = async (req: Request, res: Response) => {
 
 export const getWordCloudImage = async (req: Request, res: Response) => {
   try {
-    const image = await WordCloudImageModel.find({}).select({ image_base64: 1, _id: 0 })
+    const image = await WordCloudImageModel.find({}).select({ image_base64: 1, column: 1, _id: 0 })
 
     if (image === null) {
       return res.status(404).send({ success: false, statusCode: 404, message: "Collections not found" })
