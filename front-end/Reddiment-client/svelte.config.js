@@ -4,7 +4,7 @@ import { defineConfig } from 'vite';
 
 const config = defineConfig({
   envPrefix: 'VITE_',
-  preprocess: vitePreprocess(),
+  preprocess: vitePreprocess(), // Add Svelte preprocessing here
   kit: {
     adapter: adapter(),
   },
