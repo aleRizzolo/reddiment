@@ -1,20 +1,40 @@
 <!-- ImageGrid.svelte -->
+
 <script>
 	import { onMount } from 'svelte';
 	import { Loading } from 'carbon-components-svelte';
 
+	/**
+	 * @type {never[]}
+	 */
 	export let images = [];
+	/**
+	 * @type {any[]}
+	 */
+	let base64 = [];
+	/**
+	 * @type {any[]}
+	 */
+	let columns = [];
+	/**
+	 * @type {null}
+	 */
 	let selectedImage = null;
-	let isLoading = true; // Add a loading flag
+	let isLoading = true;
 
-	onMount(() => {
+	onMount(async () => {
 		// Simulate loading for demonstration purposes
-		setTimeout(() => {
-			isLoading = false; // Set isLoading to false when the grid is initialized
-		}, 2000); // Adjust the delay as needed
+		await new Promise((resolve) => setTimeout(resolve, 2000));
+		isLoading = false;
+		base64 = images.data.map((/** @type {{ image_base64: any; }} */ image) => image.image_base64);
+		columns = images.data.map((/** @type {{ column: any; }} */ image) => image.column);
 	});
 
+	/**
+	 * @param {any} image
+	 */
 	function openModal(image) {
+		console.log(image);
 		selectedImage = image;
 	}
 
@@ -23,26 +43,30 @@
 	}
 </script>
 
-<div class="loading-container" style={isLoading ? 'display: flex;' : 'display: none;'}>
-	<div class="loading-content">
-		<p class="loading-text" style="margin-bottom: 150px; margin-left: 25px">Loading Images...</p>
-		<Loading />
+<!-- Display loading message while waiting for images to be fetched -->
+{#if isLoading}
+	<div class="loading-container" style="display: flex;">
+		<div class="loading-content">
+			<p class="loading-text" style="margin-bottom: 150px; margin-left: 25px">Loading Images...</p>
+			<Loading />
+		</div>
 	</div>
-</div>
-
-<div class="image-grid" style={isLoading ? 'display: none;' : 'display: flex;'}>
-	{#if images.length > 0}
+{:else}
+	<!-- Once images are loaded, display the image grid -->
+	<div class="image-grid">
 		<div class="image-cards">
-			{#each images as image}
-				<div class="image-card" on:click={() => openModal(image)}>
-					<img src={`data:image/png;base64,${image}`} alt="WordCloud" class="card-image" />
+			{#each base64 as b64, i}
+				<div class="image-card" on:click={() => openModal(b64)}>
+					<div class="custom-header">{columns[i]}</div>
+					<img src={`data:image/png;base64,${b64}`} alt="WordCloud" class="card-image" />
 				</div>
 			{/each}
 		</div>
-	{/if}
-</div>
+	</div>
+{/if}
 
 {#if selectedImage}
+	<!-- Modal for displaying selected image -->
 	<div class="modal" on:click={closeModal}>
 		<div class="modal-content">
 			<img src={`data:image/png;base64,${selectedImage}`} alt="ModalImage" />
@@ -103,10 +127,18 @@
 		transform: scale(1.1);
 	}
 
+	.custom-header {
+		background-color: #47163f; /* Dark Purple */
+		padding: 8px;
+		text-align: center;
+		border-radius: 6px;
+	}
+
 	.card-image {
 		max-width: 100%;
 		max-height: 100%;
 		display: block;
+		border-radius: 6px;
 	}
 
 	.modal {

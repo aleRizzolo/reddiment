@@ -125,8 +125,7 @@ export async function fetchWordCloud(): Promise<string[]> {
 
 		if (data.success && data.data.length > 0) {
 			// Extract all base64 image data from the response
-			const imageBase64Array = data.data.map((item) => item.image_base64);
-
+			const imageBase64Array = data;
 			// Return the image base64 data as an array
 			return imageBase64Array;
 		} else {
