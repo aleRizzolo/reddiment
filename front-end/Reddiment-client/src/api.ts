@@ -11,80 +11,130 @@ export async function fetchComments(): Promise<Response> {
 	}
 }
 
-export async function fetchBarChart(): Promise<Response> {
+export async function fetchBarChart(): Promise<string[]> {
 	try {
 		const response = await fetch('http://localhost:3000/api/barChart');
 		if (!response.ok) {
 			throw new Error(`HTTP error! Status: ${response.status}`);
 		}
-		return response;
+
+		const data = await response.json(); // Assuming your API returns JSON
+
+		if (data.success && data.data.length > 0) {
+			// Get the base64 image data from the response
+			const imageBase64 = data.data[0].image_base64;
+
+			// Return the image base64 data as an array
+			return [imageBase64];
+		} else {
+			console.error('Invalid data format received from the API');
+			return [];
+		}
 	} catch (error) {
-		if (error instanceof Error) console.error('Error fetching barChart data:', error.message);
+		console.error('Error fetching barChart data:', error);
 		throw error;
 	}
 }
-
-export async function fetchBarGraph(): Promise<Response> {
+// Update fetchBarGraph function
+export async function fetchBarGraph(): Promise<string[]> {
 	try {
 		const response = await fetch('http://localhost:3000/api/barGraph');
 		if (!response.ok) {
 			throw new Error(`HTTP error! Status: ${response.status}`);
 		}
-		return response;
+
+		const data = await response.json(); // Assuming your API returns JSON
+
+		if (data.success && data.data.length > 0) {
+			// Get the base64 image data from the response
+			const imageBase64 = data.data[0].image_base64;
+
+			// Return the image base64 data as an array
+			return [imageBase64];
+		} else {
+			console.error('Invalid data format received from the API');
+			return [];
+		}
 	} catch (error) {
-		if (error instanceof Error) console.error('Error fetching barGraph data:', error.message);
+		console.error('Error fetching barGraph data:', error);
 		throw error;
 	}
 }
 
-export async function fetchHistogram(): Promise<Response> {
+// Update fetchHistogram function
+export async function fetchHistogram(): Promise<string[]> {
 	try {
 		const response = await fetch('http://localhost:3000/api/histogram');
 		if (!response.ok) {
 			throw new Error(`HTTP error! Status: ${response.status}`);
 		}
-		return response;
+
+		const data = await response.json(); // Assuming your API returns JSON
+
+		if (data.success && data.data.length > 0) {
+			// Get the base64 image data from the response
+			const imageBase64 = data.data[0].image_base64;
+
+			// Return the image base64 data as an array
+			return [imageBase64];
+		} else {
+			console.error('Invalid data format received from the API');
+			return [];
+		}
 	} catch (error) {
-		if (error instanceof Error) console.error('Error fetching histogram data:', error.message);
+		console.error('Error fetching histogram data:', error);
 		throw error;
 	}
 }
 
-export async function fetchScatter(): Promise<Response> {
+// Update fetchScatter function
+export async function fetchScatter(): Promise<string[]> {
 	try {
 		const response = await fetch('http://localhost:3000/api/scatter');
 		if (!response.ok) {
 			throw new Error(`HTTP error! Status: ${response.status}`);
 		}
-		return response;
-	} catch (error) {
-		if (error instanceof Error) console.error('Error fetching scatter data:', error.message);
-		throw error;
-	}
-}
 
-export async function fetchCollections(): Promise<Response> {
-	try {
-		const response = await fetch('http://localhost:3000/api/collections');
-		if (!response.ok) {
-			throw new Error(`HTTP error! Status: ${response.status}`);
+		const data = await response.json(); // Assuming your API returns JSON
+
+		if (data.success && data.data.length > 0) {
+			// Get the base64 image data from the response
+			const imageBase64 = data.data[0].image_base64;
+
+			// Return the image base64 data as an array
+			return [imageBase64];
+		} else {
+			console.error('Invalid data format received from the API');
+			return [];
 		}
-		return response;
 	} catch (error) {
-		if (error instanceof Error) console.error('Error fetching collections data:', error.message);
+		console.error('Error fetching scatter data:', error);
 		throw error;
 	}
 }
 
-export async function fetchWordCloud(): Promise<Response> {
+// Update fetchWordCloud function
+export async function fetchWordCloud(): Promise<string[]> {
 	try {
 		const response = await fetch('http://localhost:3000/api/wordcloud');
 		if (!response.ok) {
 			throw new Error(`HTTP error! Status: ${response.status}`);
 		}
-		return response;
+
+		const data = await response.json(); // Assuming your API returns JSON
+
+		if (data.success && data.data.length > 0) {
+			// Get the base64 image data from the response
+			const imageBase64 = data.data[0].image_base64;
+
+			// Return the image base64 data as an array
+			return [imageBase64];
+		} else {
+			console.error('Invalid data format received from the API');
+			return [];
+		}
 	} catch (error) {
-		if (error instanceof Error) console.error('Error fetching wordcloud data:', error.message);
+		console.error('Error fetching wordcloud data:', error);
 		throw error;
 	}
 }

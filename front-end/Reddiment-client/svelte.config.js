@@ -8,6 +8,10 @@ const config = defineConfig({
   kit: {
     adapter: adapter(),
   },
+  // Add optimizeDeps here
+  optimizeDeps: {
+    include: ['lodash.get', 'lodash.isequal', 'lodash.clonedeep']
+  }
 });
 
 export default config;

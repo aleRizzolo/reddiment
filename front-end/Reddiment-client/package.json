@@ -40,16 +40,19 @@
 		"eslint-plugin-svelte": "^2.30.0",
 		"prettier": "^2.8.0",
 		"prettier-plugin-svelte": "^2.10.1",
+		"resize-observer-polyfill": "^1.5.1",
 		"sass": "^1.66.1",
 		"smui-theme": "^7.0.0-beta.14",
 		"svelte": "^4.0.5",
+		"svelte-carousel": "^1.0.25",
 		"svelte-check": "^3.5.1",
 		"svelte-materialify": "^0.3.11",
 		"svelte-preprocess": "^5.0.4",
 		"svelte-table": "^0.6.1",
 		"tslib": "^2.4.1",
 		"typescript": "^5.2.2",
-		"vite": "^4.4.2"
+		"vite": "^4.4.2",
+		"vite-plugin-iso-import": "^1.0.0"
 	},
 	"type": "module"
 }
