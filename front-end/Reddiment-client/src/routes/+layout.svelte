@@ -1,6 +1,7 @@
 <script>
 	import Header from './Header.svelte';
 	import './styles.css';
+	import '../global.css';
 </script>
 
 <div class="app">
@@ -11,7 +12,7 @@
 	</main>
 
 	<footer>
-		<p>visit <a href="https://"> to make a donation</p>
+		<p><a href="https://">visit to make a donation</a></p>
 	</footer>
 </div>
 

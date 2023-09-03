@@ -9,18 +9,16 @@
 </svelte:head>
 
 <section>
-		<span class="welcome">
-			<picture>
-				<source srcset={welcome} type="image/webp" />
-				<img src={welcome_fallback} alt="Welcome" />
-			</picture>
-		</span>
+	<span class="welcome">
+		<picture>
+			<source srcset={welcome} type="image/webp" />
+			<img src={welcome_fallback} alt="Welcome" />
+		</picture>
+	</span>
 
 	<h2>
 		<strong>Use the top menu to navigate on the site </strong>
 	</h2>
-
-	
 </section>
 
 <style>

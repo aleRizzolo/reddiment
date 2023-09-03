@@ -1,2 +1,5 @@
-<h1>Images</h1>
-<a href="/">Home</a>
+<script>
+	import WordCloud from './wordCloud.svelte';
+</script>
+
+<WordCloud />

@@ -121,14 +121,14 @@ export async function fetchWordCloud(): Promise<string[]> {
 			throw new Error(`HTTP error! Status: ${response.status}`);
 		}
 
-		const data = await response.json(); // Assuming your API returns JSON
+		const data = await response.json();
 
 		if (data.success && data.data.length > 0) {
-			// Get the base64 image data from the response
-			const imageBase64 = data.data[0].image_base64;
+			// Extract all base64 image data from the response
+			const imageBase64Array = data.data.map((item) => item.image_base64);
 
 			// Return the image base64 data as an array
-			return [imageBase64];
+			return imageBase64Array;
 		} else {
 			console.error('Invalid data format received from the API');
 			return [];

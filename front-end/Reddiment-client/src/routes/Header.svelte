@@ -1,13 +1,10 @@
 <script>
 	import { page } from '$app/stores';
-	import logo from '$lib/images/svelte-logo.svg';
 	import github from '$lib/images/github.svg';
 </script>
 
 <header>
-	<div class="corner">
-		
-	</div>
+	<div class="corner" />
 
 	<nav>
 		<svg viewBox="0 0 2 3" aria-hidden="true">
@@ -18,7 +15,7 @@
 				<a href="/">Home</a>
 			</li>
 			<li aria-current={$page.url.pathname === '/dataset' ? 'page' : undefined}>
-  				<a href="/dataset">Dataset</a>
+				<a href="/dataset">Dataset</a>
 			</li>
 
 			<li aria-current={$page.url.pathname === '/images' ? 'page' : undefined}>

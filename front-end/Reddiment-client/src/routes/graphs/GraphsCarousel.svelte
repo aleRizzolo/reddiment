@@ -1,6 +1,5 @@
 <script>
 	import { onMount } from 'svelte';
-	// @ts-ignore
 	import Carousel from 'svelte-carousel';
 	import { fetchBarChart, fetchBarGraph, fetchHistogram, fetchScatter } from '../../api';
 	import { ProgressBar } from 'carbon-components-svelte';
@@ -9,10 +8,13 @@
 	 * @type {string | any[]}
 	 */
 	let images = [];
+	let isLoading = false; // Initialize as false
 
-	// Initialize the carousel once, outside of onMount
 	onMount(() => {
-		fetchData();
+		isLoading = true; // Set isLoading to true before fetching data
+		setTimeout(() => {
+			fetchData();
+		}, 1000);
 	});
 
 	async function fetchData() {
@@ -26,10 +28,16 @@
 			images = [...barChartData, ...barGraphData, ...histogramData, ...scatterData];
 		} catch (error) {
 			if (error instanceof Error) console.error('Error fetching graphs:', error.message);
+		} finally {
+			isLoading = false; // Set isLoading to false after data fetching is completed
 		}
 	}
 </script>
 
+{#if isLoading}
+	<p style="color: white; font-weight: bold; text-align: center;">Loading Graphs...</p>
+	<ProgressBar size="sm" />
+{/if}
 {#if images.length > 0}
 	<Carousel
 		autoplay
@@ -43,7 +51,4 @@
 			<img src={`data:image/png;base64,${image}`} alt="Graphs" />
 		{/each}
 	</Carousel>
-{:else}
-	<p style="color: black; font-weight: bold; text-align: center;">Loading images...</p>
-	<ProgressBar />
 {/if}

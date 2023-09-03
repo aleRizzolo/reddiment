@@ -83,8 +83,8 @@
 
 <!-- Loading Indicator -->
 {#if loading}
-	<p style="color: black; font-weight: bold; text-align: center;">Loading...</p>
-	<ProgressBar />
+	<p style="color: white; font-weight: bold; text-align: center;">Loading...</p>
+	<ProgressBar size="sm" />
 {:else}
 	<!-- Container for the responsive table (centered) -->
 	<div
