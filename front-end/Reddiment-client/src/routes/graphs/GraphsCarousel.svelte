@@ -3,15 +3,12 @@
 	// @ts-ignore
 	import Carousel from 'svelte-carousel';
 	import { fetchBarChart, fetchBarGraph, fetchHistogram, fetchScatter } from '../../api';
+	import { ProgressBar } from 'carbon-components-svelte';
 
 	/**
 	 * @type {string | any[]}
 	 */
 	let images = [];
-	/**
-	 * @type {{ destroy: () => void; }}
-	 */
-	let carousel;
 
 	// Initialize the carousel once, outside of onMount
 	onMount(() => {
@@ -33,20 +30,20 @@
 	}
 </script>
 
-<div id="carousel-container">
-	{#if images.length > 0}
-		<Carousel
-			bind:this={carousel}
-			autoplay
-			autoplayDuration={5000}
-			pauseOnFocus
-			autoplayProgressVisible
-		>
-			{#each images as image}
-				<img src={`data:image/png;base64,${image}`} alt="Image" />
-			{/each}
-		</Carousel>
-	{:else}
-		<p style="color: black; font-weight: bold; text-align: center;">Loading images...</p>
-	{/if}
-</div>
+{#if images.length > 0}
+	<Carousel
+		autoplay
+		autoplayDuration={5000}
+		pauseOnFocus
+		autoplayProgressVisible
+		let:showPrevPage
+		let:showNextPage
+	>
+		{#each images as image}
+			<img src={`data:image/png;base64,${image}`} alt="Graphs" />
+		{/each}
+	</Carousel>
+{:else}
+	<p style="color: black; font-weight: bold; text-align: center;">Loading images...</p>
+	<ProgressBar />
+{/if}
