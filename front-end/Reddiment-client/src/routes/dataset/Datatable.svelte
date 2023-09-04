@@ -1,12 +1,11 @@
-<	import type { DataTableRow } from 'carbon-components-svelte/types/DataTable/DataTable.svelte';
-script lang="ts">
+<script lang="ts">
 	import 'carbon-components-svelte/css/g100.css';
 	import { onMount } from 'svelte';
 	import { fetchComments } from '../../api';
 	import { DataTable, Pagination, ProgressBar } from 'carbon-components-svelte';
 	import type { Comment } from './type';
 
-	let displayedRows: Comment[] | readonly DataTableRow[] | undefined = [];
+	let displayedRows = [];
 	let items: Comment[] = [];
 	let rowsPerPage = 10;
 	let currentPage = 1;
@@ -29,6 +28,7 @@ script lang="ts">
 		slice = items.slice(start, end);
 		lastPage = Math.max(Math.ceil(items.length / rowsPerPage) - 1, 0);
 
+		// Define headers based on your data structure
 		headers = [
 			{ key: 'comment', value: 'Comment' },
 			{ key: 'probabilities_acceptable', value: 'Acceptable' },
@@ -44,11 +44,12 @@ script lang="ts">
 
 	// Function to handle column sorting
 	function handleColumnSort(columnKey: string) {
+		// Toggle sorting direction if the same column is clicked again
 		if (columnKey === sortableColumn) {
 			sortable = !sortable;
 		} else {
 			sortableColumn = columnKey;
-			sortable = true; 
+			sortable = true; // Enable sorting for the clicked column
 		}
 	}
 
@@ -63,6 +64,7 @@ script lang="ts">
 
 	// Define function to filter comments based on offensive percentage
 	function filterComments(filterKey: string, filterValue: number) {
+		// Implement your filtering logic here
 		displayedRows = slice.filter((item) => {
 			if (filterKey === 'offensive') {
 				const offensivePercentage = parseFloat(
@@ -70,26 +72,29 @@ script lang="ts">
 				);
 				return !isNaN(offensivePercentage) && offensivePercentage >= filterValue;
 			}
+			// Add more filter logic for other options if needed
 		});
 	}
 
 	// Function to handle search
 	function handleSearch() {
-		const filteredItems = slice.filter((items) =>
-			items.comment.toLowerCase().includes(searchTerm.toLowerCase())
+		const filteredItems = slice.filter((item) =>
+			item.comment.toLowerCase().includes(searchTerm.toLowerCase())
 		);
 
+		// Apply sorting logic if sortable
 		const sortedItems = sortable
 			? filteredItems.slice().sort((a, b) => {
 					const aValue = a[sortableColumn];
 					const bValue = b[sortableColumn];
-					return aValue - bValue;
+					return aValue - bValue; // Implement your sorting logic here
 			  })
 			: filteredItems;
 
 		displayedRows = sortedItems.map((item, index) => ({ key: index, ...item }));
 
-		const dummy = Math.random(); 
+		// Force a reactivity update by changing a variable (e.g., a dummy variable)
+		const dummy = Math.random(); // Change a variable to trigger reactivity
 	}
 
 	onMount(async () => {
@@ -98,7 +103,9 @@ script lang="ts">
 			if (response.ok) {
 				const newData = await response.json();
 				if (Array.isArray(newData.data)) {
+					// Update items and add an ordered numeric list starting from 0
 					items = newData.data.map((row: any, i: any) => ({ ...row, id: i }));
+					// Update derived variables
 					updateDerivedVariables();
 				} else {
 					console.error('API response data is not an array:', newData.data);
@@ -109,6 +116,7 @@ script lang="ts">
 		} catch (error) {
 			if (error instanceof Error) console.error('Error fetching data:', error.message);
 		} finally {
+			// Set loading to false when data fetching is done
 			loading = false;
 		}
 	});
@@ -119,13 +127,16 @@ script lang="ts">
 	}
 
 	$: {
-		handleSearch(); 
-</>
+		handleSearch(); // Call the handleSearch function to update displayedRows
+	}
+</script>
 
+<!-- Loading Indicator -->
 {#if loading}
 	<p style="color: white; font-weight: bold; text-align: center;">Loading...</p>
 	<ProgressBar size="sm" />
 {:else}
+	<!-- Container for the responsive table (centered) -->
 	<div
 		style="overflow-x: auto; text-align: center; width: 130%; margin: 0 auto; margin-left: -15%;"
 	>
@@ -159,11 +170,13 @@ script lang="ts">
 								Offensive >= 50%
 							</a>
 						</li>
+						<!-- Add more filter options here -->
 					</ul>
 				</div>
 			</div>
 		</div>
 
+		<!-- DataTable and Pagination components -->
 		<DataTable
 			zebra
 			sortable
