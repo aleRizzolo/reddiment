@@ -1,4 +1,5 @@
 /* src/global.css */
+@import 'bootstrap/dist/css/bootstrap.min.css';
 body {
     background-image: url('../pexels-philippe-donn-1169754.jpg');
     /* Replace with the actual path to your image */

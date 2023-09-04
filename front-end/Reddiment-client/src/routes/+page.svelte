@@ -16,7 +16,7 @@
 		</picture>
 	</span>
 
-	<h2>
+	<h2 style="color: whitesmoke;">
 		<strong>Use the top menu to navigate on the site </strong>
 	</h2>
 </section>
