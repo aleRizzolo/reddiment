@@ -1,6 +1,6 @@
 export async function fetchComments(): Promise<Response> {
 	try {
-		const response = await fetch('http://localhost:3000/api/dataset');
+		const response = await fetch('https://reddiment-backend2.azurewebsites.net/api/dataset');
 		if (!response.ok) {
 			throw new Error(`HTTP error! Status: ${response.status}`);
 		}
@@ -13,7 +13,7 @@ export async function fetchComments(): Promise<Response> {
 
 export async function fetchBarChart(): Promise<string[]> {
 	try {
-		const response = await fetch('http://localhost:3000/api/barChart');
+		const response = await fetch('https://reddiment-backend2.azurewebsites.net/api/barChart');
 		if (!response.ok) {
 			throw new Error(`HTTP error! Status: ${response.status}`);
 		}
@@ -38,7 +38,7 @@ export async function fetchBarChart(): Promise<string[]> {
 // Update fetchBarGraph function
 export async function fetchBarGraph(): Promise<string[]> {
 	try {
-		const response = await fetch('http://localhost:3000/api/barGraph');
+		const response = await fetch('https://reddiment-backend2.azurewebsites.net/api/barGraph');
 		if (!response.ok) {
 			throw new Error(`HTTP error! Status: ${response.status}`);
 		}
@@ -64,7 +64,7 @@ export async function fetchBarGraph(): Promise<string[]> {
 // Update fetchHistogram function
 export async function fetchHistogram(): Promise<string[]> {
 	try {
-		const response = await fetch('http://localhost:3000/api/histogram');
+		const response = await fetch('https://reddiment-backend2.azurewebsites.net/api/histogram');
 		if (!response.ok) {
 			throw new Error(`HTTP error! Status: ${response.status}`);
 		}
@@ -90,7 +90,7 @@ export async function fetchHistogram(): Promise<string[]> {
 // Update fetchScatter function
 export async function fetchScatter(): Promise<string[]> {
 	try {
-		const response = await fetch('http://localhost:3000/api/scatter');
+		const response = await fetch('https://reddiment-backend2.azurewebsites.net/api/scatter');
 		if (!response.ok) {
 			throw new Error(`HTTP error! Status: ${response.status}`);
 		}
@@ -116,7 +116,7 @@ export async function fetchScatter(): Promise<string[]> {
 // Update fetchWordCloud function
 export async function fetchWordCloud(): Promise<string[]> {
 	try {
-		const response = await fetch('http://localhost:3000/api/wordcloud');
+		const response = await fetch('https://reddiment-backend2.azurewebsites.net/api/wordcloud');
 		if (!response.ok) {
 			throw new Error(`HTTP error! Status: ${response.status}`);
 		}
