@@ -1,5 +1,6 @@
 # Reddiment - Hate Speech Detection on Reddit
 
+![GitHub tag (with filter)](https://img.shields.io/github/v/tag/brataccas99/reddiment)
 ![workflow](https://github.com/brataccas99/sentiReddy/actions/workflows/ci.yml/badge.svg)
 
 **Reddiment** is a GitHub project aimed at detecting hate speech on the Reddit platform. Hate speech detection is a crucial task for maintaining a positive and safe online environment. Reddiment utilizes various technologies to analyze Reddit content, identify hate speech, and provide an interface for users to interact with the results.
