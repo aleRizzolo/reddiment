@@ -1,8 +1,8 @@
 # Reddiment - Hate Speech Detection on Reddit
 
 ![GitHub tag (with filter)](https://img.shields.io/github/v/tag/brataccas99/reddiment)
-![workflow](https://github.com/brataccas99/sentiReddy/actions/workflows/ci.yml/badge.svg)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/aleRizzolo/reddiment/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/aleRizzolo/reddiment/?branch=main)<br>
+![Scrutinizer code quality (GitHub/Bitbucket)](https://img.shields.io/scrutinizer/quality/g/aleRizzolo/reddiment/main)
+![workflow](https://github.com/brataccas99/sentiReddy/actions/workflows/ci.yml/badge.svg)<br>
 ![Jupyter Notebook](https://img.shields.io/badge/jupyter-%23FA0F00.svg?style=for-the-badge&logo=jupyter&logoColor=white)
 ![Azure](https://img.shields.io/badge/azure-%230072C6.svg?style=for-the-badge&logo=microsoftazure&logoColor=white)
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
