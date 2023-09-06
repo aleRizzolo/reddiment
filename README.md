@@ -7,6 +7,7 @@
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
 ![Svelte](https://img.shields.io/badge/svelte-%23f1413d.svg?style=for-the-badge&logo=svelte&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
 
 **Reddiment** is a GitHub project aimed at detecting hate speech on the Reddit platform. Hate speech detection is a crucial task for maintaining a positive and safe online environment. Reddiment utilizes various technologies to analyze Reddit content, identify hate speech, and provide an interface for users to interact with the results.
 
