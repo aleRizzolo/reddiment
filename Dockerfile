@@ -17,7 +17,7 @@ RUN pip install praw \
     pip install python-dotenv \
     pip install beautifulsoup4
 
-COPY . .
+COPY main* ./
 
 EXPOSE 8888
 
