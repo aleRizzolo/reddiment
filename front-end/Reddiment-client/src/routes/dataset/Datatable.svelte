@@ -4,6 +4,7 @@
 	import { fetchComments } from '../../api';
 	import { DataTable, Pagination, ProgressBar } from 'carbon-components-svelte';
 	import type { Comment } from './type';
+	import Select from 'svelte-select';
 
 	let displayedRows = [];
 	let items: Comment[] = [];
@@ -53,26 +54,20 @@
 		}
 	}
 
-	let filterKey = ''; // Define the default filter key (e.g., 'offensive')
-	let filterValue = 0; // Define the default filter value (e.g., 50)
-
-	// Function to set the filter criteria
-	function setFilterCriteria(key: string, value: number) {
-		filterKey = key;
-		filterValue = value;
-	}
-
 	// Define function to filter comments based on offensive percentage
-	function filterComments(filterKey: string, filterValue: number) {
-		// Implement your filtering logic here
+	function filterComments(item: any) {
+		console.log(item);
 		displayedRows = slice.filter((item) => {
-			if (filterKey === 'offensive') {
-				const offensivePercentage = parseFloat(
-					item.probabilities_offensive.trim().replace('%', '')
-				);
-				return !isNaN(offensivePercentage) && offensivePercentage >= filterValue;
-			}
-			// Add more filter logic for other options if needed
+			const offensivePercentage = parseFloat(item.probabilities_offensive.trim().replace('%', ''));
+			const hatePercentage = parseFloat(item.probabilities_hate.trim().replace('%', ''));
+			const violentPercentage = parseFloat(item.probabilities_violent.trim().replace('%', ''));
+
+			// Check if any of the probabilities are greater than 50%
+			return (
+				(!isNaN(offensivePercentage) && offensivePercentage > 50) ||
+				(!isNaN(hatePercentage) && hatePercentage > 50) ||
+				(!isNaN(violentPercentage) && violentPercentage > 50)
+			);
 		});
 	}
 
@@ -129,6 +124,14 @@
 	$: {
 		handleSearch(); // Call the handleSearch function to update displayedRows
 	}
+
+	//select
+	let itemSelect = [
+		{ label: 'Offensive > 50%', value: 'One' },
+		{ label: 'violent > 50%', value: 'Two' },
+		{ label: 'Hate > 50%', value: 'Three' }
+	];
+	let justValue: { label: any; value: any };
 </script>
 
 <!-- Loading Indicator -->
@@ -154,24 +157,22 @@
 				<h1 style="color: white; font-weight: bold; text-align: center;">Dataset</h1>
 			</div>
 			<div class="col">
-				<div class="dropdown">
-					<button
-						class="btn btn-secondary dropdown-toggle"
-						type="button"
-						id="filterDropdown"
-						data-bs-toggle="dropdown"
-						aria-expanded="false"
-					>
-						Filter
-					</button>
-					<ul class="dropdown-menu" aria-labelledby="filterDropdown">
-						<li>
-							<a class="dropdown-item" on:click={() => setFilterCriteria('offensive', 50)}>
-								Offensive >= 50%
-							</a>
-						</li>
-						<!-- Add more filter options here -->
-					</ul>
+				<Select
+					items={itemSelect}
+					placeholder="Filters"
+					showChevron={true}
+					inputAttributes={{ autocomplete: 'off' }}
+					bind:value={justValue}
+					--border-radius="10px"
+					--placeholder-color="white"
+					containerStyles="background: gray !important;"
+				/>
+				<div color="blue">
+					<!-- svelte-ignore a11y-no-static-element-interactions -->
+					{#each itemSelect as item}
+						<!-- svelte-ignore a11y-click-events-have-key-events -->
+						<span on:click={() => filterComments(item)} />
+					{/each}
 				</div>
 			</div>
 		</div>
